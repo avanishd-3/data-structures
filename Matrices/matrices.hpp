@@ -2,6 +2,8 @@
 #include <iomanip>
 #include <sstream>
 
+#include "Arrays/array.hpp"
+
 template<typename T>
 class DiagonalMatrix {
     private: 
@@ -185,8 +187,84 @@ class SparseMatrix {
             sum->num_values = k;
             return sum;
         }
-        
+};
+
+template <typename T>
+class Matrix {
+	public:
+		Matrix()
+			: rows{0}
+			, cols{0}
+			, data(0)
+		{
+		}
+
+		Matrix(int rows, int cols)
+			: rows{rows}
+			, cols{cols}
+			, data(rows)
+			{
+			for (int i = 0; i < rows; ++i) { // Each array is a row of the matrix
+				data[i] = Array<T>{cols};
+			}
+		}
+
+		Array<T>& operator[](int row) {
+			return data[row];
+		}
+
+		const Array<T>& operator[](int row) const {
+			return data[row];
+		}
+
+		
+		int num_rows() const {
+			return rows;
+		}
+		int num_cols() const {
+			return cols;
+		}
+
+		void fill(const T &val) {
+			for (int i = 0; i < rows; ++i) {
+				data[i].fill(val);
+			}
+		}
+	
+		template <typename Fn>
+		void fill_with_fn(Fn fn) {
+			for (int i = 0; i < rows; ++i) {
+				for (int j = 0; j < cols; ++j) {
+					data[i][j] = fn(i, j);
+				}
+			}
+		}
+
+        friend std::ostream& operator<<(std::ostream &out, const Matrix<T> &matrix) {
+	        for (int i = 0; i < matrix.num_rows(); ++i) {
+		        out << matrix[i] << std::endl;
+	        }
+
+	        return out;
+        }
+
+        friend std::istream& operator>>(std::istream &in, Matrix<T> &matrix) {
+	        std::string line;
+	        int i = 0;
 
 
+	        while (std::getline(in, line) && i < matrix.num_rows()) {
+		        if (line == "") {
+			        continue;
+		        }
+		        std::istringstream temp(line);
+		        temp >> matrix[i];
+		        ++i;
+	        } 
+	        return in; 
+        }
 
+	private:
+		int rows, cols;
+		Array<Array<T>> data;
 };
