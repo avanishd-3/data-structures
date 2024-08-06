@@ -1,10 +1,11 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+#include <utility>
 
 
 template<typename T>
-class Array { // Fixed size array
+class StaticArray { // Fixed size array
     private:
         T *buf;
         int max_len; // Physical size
@@ -19,21 +20,21 @@ class Array { // Fixed size array
         }
 
     public:
-        Array() // Zero size array
+        StaticArray() // Zero size array
             : buf{nullptr}
             , max_len{0}
             , current_len{0}
         {
         }
         
-        Array(int len)
+        StaticArray(int len)
             : buf(new T[max_len])
             , max_len{len}
             , current_len{0}
         {
         }
 
-        ~Array() {
+        ~StaticArray() {
             delete[] buf;
         }
 
@@ -41,7 +42,7 @@ class Array { // Fixed size array
             return current_len;
         }
 
-        friend std::ostream& operator<<(std::ostream &out, const Array<T> &array) {
+        friend std::ostream& operator<<(std::ostream &out, const StaticArray<T> &array) {
 	        std::stringstream temp;
 	        temp << std::setprecision(2) << std::fixed << std::right;
 
@@ -51,7 +52,7 @@ class Array { // Fixed size array
 
 	        out << temp.str();
 	        return out;
-}
+        }
 
         void append(int n) { // O(1) operation
             if (current_len < max_len) {
@@ -149,4 +150,143 @@ class Array { // Fixed size array
 			return buf[index]; // Shuts up compiler
 		}
 
+};
+
+template <typename T>
+class Array {
+	public:
+		// Construct zero-length array
+		Array()
+			: len{0}
+			, buf{nullptr}
+		{
+		}
+
+		// Construct array of given length
+		explicit Array(int len)
+			: len{len}
+			, buf{new T[len]}
+		{
+		}
+
+		// Copy and move constructors
+		Array(const Array &other) 
+			: len{0}
+			, buf{nullptr}
+		{
+			int other_len = other.length();
+			Array temp_array = Array(other_len);
+
+			for (int i = 0; i < other_len; ++i) {
+				temp_array.buf[i] = other.buf[i];
+			}
+
+			swap(*this, temp_array);
+		}
+
+		Array(Array &&other) noexcept
+			: len{other.len}
+			, buf{other.buf}
+		{
+			other.len = 0;
+			other.buf = nullptr;
+		}
+
+		// Swap 2 arrays without allocations
+		friend void swap(Array &lhs, Array &rhs) noexcept {
+			std::swap(lhs.len, rhs.len);
+			std::swap(lhs.buf, rhs.buf);
+		}
+
+		// Copy and move assignment
+		Array& operator=(const Array &other) {
+			Array temp_array(other);
+			swap(*this, temp_array);
+
+			return *this;
+		}
+
+		Array& operator=(Array &&other) noexcept {
+
+			if(this == &other) {
+				return *this; // Handle self-assignment
+			}
+
+			delete[] buf;
+
+			swap(*this, other);
+
+			other.len = 0;
+			other.buf = nullptr;
+
+			return *this;
+		}
+
+		// Destructor
+		~Array() {
+			delete[] buf;
+		}
+
+		// Get length of array
+		int length() const {
+			return len;
+		}
+
+		// Get a particular element of the array
+		T& operator[](int index) {
+			if (!in_bounds(index)) {
+				throw std::out_of_range("Index is out of range");
+			}
+			return buf[index]; // Shuts up compiler
+		}
+
+		const T& operator[](int index) const {
+			if (!in_bounds(index)) {
+				throw std::out_of_range("Index is out of range");
+			}
+			return buf[index]; // Shuts up compiler
+		}
+
+		// Set every element of the array to val
+		void fill (T val) {
+			for (int i = 0; i < len; ++i) {
+				buf[i] = val;
+			}
+		}
+
+		// TODO: Fill array by setting every entry i to fn(i)
+		template <typename Fn>
+		void fill_with_fn(Fn fn) {
+			for (int i = 0; i < len; ++i) {
+				buf[i] = fn(i);
+			}	
+		}
+
+        friend std::ostream& operator<<(std::ostream &out, const Array<T> &array) {
+            std::stringstream temp;
+	        temp << std::setprecision(2) << std::fixed << std::right;
+            
+            for (int i = 0; i < array.length(); ++i) {
+		        temp << std::setw(8) << array[i];
+	        }
+
+	        out << temp.str();
+	        return out;
+        }
+
+        // Read array from in separated by whitespace
+        friend std::istream& operator>>(std::istream &in, Array<T> &array) {
+            for (int i = 0; i < array.length(); ++i) {
+                in >> array[i];
+	        }
+	        return in;
+        }
+		
+	private:
+		int len;
+		T *buf;
+
+		bool in_bounds(int index) const {
+			return index >= 0 && index < len;
+		}
 };
