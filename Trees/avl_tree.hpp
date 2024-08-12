@@ -63,7 +63,7 @@ class AVLTree {
             return nullptr;
         }
 
-        void RR_rotation(TreeNode *p) {
+        TreeNode* RR_rotation(TreeNode *p) {
             if (p) {
                 TreeNode* p_right = p->right;
                 TreeNode *p_right_left = p_right->left;
@@ -83,7 +83,7 @@ class AVLTree {
             return nullptr;
         }
 
-        void LR_rotation(TreeNode *p) {
+        TreeNode* LR_rotation(TreeNode *p) {
             if (p) {
                 TreeNode* p_left = p->left;
                 TreeNode* p_left_right = p_left->right;
@@ -107,7 +107,7 @@ class AVLTree {
             return nullptr;
         }
 
-        void RL_rotation(TreeNode *p) {
+        TreeNode* RL_rotation(TreeNode *p) {
             if (p) {
                 TreeNode* p_right = p->right;
                 TreeNode* p_right_left = p_right->left;
