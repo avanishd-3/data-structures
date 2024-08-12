@@ -194,7 +194,7 @@ class AVLTree {
 
         TreeNode* remove(TreeNode *root, T key) {
             if (root == nullptr) {
-                return;
+                return nullptr;
             }
     
             if (root->left == nullptr && root->right == nullptr) {
@@ -240,15 +240,15 @@ class AVLTree {
                 root = LL_rotation(root);
             }
 
-            else if (balance_factor(root) < 1 && balance_factor(root->right) == 1) { // R1 Rotation
+            else if (balance_factor(root) < -1 && balance_factor(root->right) == 1) { // R1 Rotation
                 root = RL_rotation(root);
             }
 
-            else if (balance_factor(root) < 1 && balance_factor(root->right) == -1) { // R-1 Rotation
+            else if (balance_factor(root) < -1 && balance_factor(root->right) == -1) { // R-1 Rotation
                 root = RR_Rotation(root);
             }
 
-            else if (balance_factor(root) < 1 && balance_factor(root->right) == 0) { // R0 Rotation
+            else if (balance_factor(root) < -1 && balance_factor(root->right) == 0) { // R0 Rotation
                 root = RR_Rotation(root);
             }
 
