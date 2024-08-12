@@ -131,6 +131,25 @@ class AVLTree {
             return nullptr;
         }
 
+        void recursive_insert(TreeNode *root, T val) {
+            if (!root) {
+                root = new Node{val, nullptr, nullptr};
+            }
+    
+            else {
+                if (val < root->data) {
+                    root->left = recursive_insert(root->left, val);
+                }
+                else if (val > root->data) {
+                    root->right = recursive_insert(root->right, val);
+                }
+        
+                else {
+                    return;
+                }
+            }
+        }
+
     public:
         AVLTree()
             : root{nullptr}
