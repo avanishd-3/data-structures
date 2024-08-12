@@ -133,7 +133,7 @@ class AVLTree {
 
         void recursive_insert(TreeNode *root, T val) {
             if (!root) {
-                root = new Node{val, nullptr, nullptr};
+                root = new Node{val, nullptr, nullptr, 0};
             }
     
             else {
@@ -171,23 +171,11 @@ class AVLTree {
             return std::max(x_height, y_height) + 1;
         }
 
-         void insert(TreeNode *root, T val) {
-            if (!root) {
-                root = new Node{val, nullptr, nullptr, 0};
-            }
-    
-            else {
-                if (val < root->data) {
-                    root->left = recursive_insert(root->left, val);
-                }
-                else if (val > root->data) {
-                    root->right = recursive_insert(root->right, val);
-                }
-        
-                else {
-                    return;
-                }
-            }
+         void insert(T val) {
+             
+            // Insert value into tree
+             
+            recursive_insert(root, val);
             root->height = height(root);
 
             // Check balance factors & perform rotations if necessary
