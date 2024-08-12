@@ -196,7 +196,7 @@ class AVLTree {
             }
         }
 
-        TreeNode* delete(TreeNode *root, T key) {
+        TreeNode* remove(TreeNode *root, T key) {
             if (root == nullptr) {
                 return;
             }
@@ -207,24 +207,24 @@ class AVLTree {
             }
     
             if (key < root->data) {
-                root->left = delete(root->left, key);
+                root->left = remove(root->left, key);
             }
 
             else if (key > root->data) {
-                root->right = delete(root->right, key);
+                root->right = remove(root->right, key);
             }
     
             else {
                 if (height(root->left) > height(root->right)) {
                     TreeNode* q = InPre(root->left);
                     root->data = q->data;
-                    root->left = delete(p->left, q->data);
+                    root->left = remove(p->left, q->data);
                 }
         
                 else {
                     TreeNode* q = InSucc(root->right);
                     root->data = q->data;
-                    root->right = delete(p->right, q->data);
+                    root->right = remove(p->right, q->data);
                 }
             }
 
