@@ -20,7 +20,7 @@ class MaxHeap {
         }
 
         const int size() const noexcept{
-            return heap.size();
+            return heap.size() - 1;
 
         }
 
@@ -36,12 +36,11 @@ class MaxHeap {
             heap.push_back(key);
             int i = heap.size();
 
-            while (i > 1 && heap[i/2] < n) {
+            while (i > 1 && heap[i/2] < key) {
                 heap[i] = heap[i/2];
                 i = i/2;
             }
-            heap[i] = n;
-            ++size;
+            heap[i] = key;
         }
 
         void max_heapify(std::vector<T> &A, i) { // In-place & runs in O(n) time
@@ -62,10 +61,10 @@ class MaxHeap {
             }
         }
 
-        void delete() { // Can only delete the top element from the max heap
+        void remove() { // Can only delete the top element from the max heap
             int size = heap.size();
 
-            heap[1] = heap[size];
+            heap[1] = heap[size - 1];
 
             int i = 1;
 
@@ -74,6 +73,9 @@ class MaxHeap {
                 
                 i = heap[2*i] > heap[2*i+1] ? 2*i : 2*i + 1;
             }
+
+	    heap.resize(size-1);
+	
         }
 
         friend std::ostream& operator<<(std::ostream &out, const MaxHeap<T> &max_heap) {
@@ -81,7 +83,7 @@ class MaxHeap {
 	        for (int i = 1; i < size; ++i) {
 		        out << max_heap[i] << ' ';
 	        }
-            out << std::endl;
+            	out << std::endl;
 
 	        return out;
         }
@@ -106,7 +108,7 @@ class MinHeap {
         }
 
         const int size() const noexcept{
-            return heap.size();
+            return heap.size() - 1;
 
         }
 
@@ -122,12 +124,11 @@ class MinHeap {
             heap.push_back(key);
             int i = heap.size();
 
-            while (i > 1 && heap[i/2] > n) {
+            while (i > 1 && heap[i/2] > key) {
                 heap[i] = heap[i/2];
                 i = i/2;
             }
-            heap[i] = n;
-            ++size;
+            heap[i] = key;
         }
 
         void min_heapify(std::vector<T> &A, i) {  // In-place & runs in O(n) time
@@ -148,10 +149,10 @@ class MinHeap {
             }
         }
 
-        void delete() { // Can only delete the top element from the max heap
+        void remove() { // Can only delete the top element from the max heap
             int size = heap.size();
 
-            heap[1] = heap[size];
+            heap[1] = heap[size - 1];
 
             int i = 1;
 
@@ -160,6 +161,8 @@ class MinHeap {
                 
                 i = heap[2*i] < heap[2*i+1] ? 2*i : 2*i + 1;
             }
+
+	    heap.resize(size-1);
         }
 
         friend std::ostream& operator<<(std::ostream &out, const MinHeap<T> &min_heap) {
