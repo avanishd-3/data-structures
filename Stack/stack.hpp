@@ -107,7 +107,7 @@ class LLStack {
             std::swap(head, st.head);
             std::swap(len, st.len);
 
-            // Destructor for st automatically called
+            // Destructor for temp automatically called
             
             return *this;
         }
