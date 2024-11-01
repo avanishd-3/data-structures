@@ -71,7 +71,7 @@ class LLStack {
         class StackEmptyException : public std::exception {
             public:
                 char* what() {
-                    retur "Stack is empty";
+                    return("Stack is empty");
                 }
 
         };
@@ -107,7 +107,7 @@ class LLStack {
             std::swap(head, st.head);
             std::swap(len, st.len);
 
-            // Destructor for st automatically called
+            // Destructor for temp automatically called
             
             return *this;
         }
@@ -129,10 +129,16 @@ class LLStack {
         }
 
         T& top() {
+            if (isEmpty()) {
+                throw StackEmptyException;
+            }
             return head->data;
         }
 
         const T& top() const {
+            if (isEmpty()) {
+                throw StackEmptyException;
+            }
             return head->data;
         }
 

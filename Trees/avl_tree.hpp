@@ -63,7 +63,7 @@ class AVLTree {
             return nullptr;
         }
 
-        void RR_rotation(TreeNode *p) {
+        TreeNode* RR_rotation(TreeNode *p) {
             if (p) {
                 TreeNode* p_right = p->right;
                 TreeNode *p_right_left = p_right->left;
@@ -83,7 +83,7 @@ class AVLTree {
             return nullptr;
         }
 
-        void LR_rotation(TreeNode *p) {
+        TreeNode* LR_rotation(TreeNode *p) {
             if (p) {
                 TreeNode* p_left = p->left;
                 TreeNode* p_left_right = p_left->right;
@@ -107,7 +107,7 @@ class AVLTree {
             return nullptr;
         }
 
-        void RL_rotation(TreeNode *p) {
+        TreeNode* RL_rotation(TreeNode *p) {
             if (p) {
                 TreeNode* p_right = p->right;
                 TreeNode* p_right_left = p_right->left;
@@ -153,16 +153,19 @@ class AVLTree {
         }
 
          void insert(TreeNode *root, T val) {
+             
+            // Insert value into tree
+             
             if (!root) {
                 root = new Node{val, nullptr, nullptr, 0};
             }
     
             else {
                 if (val < root->data) {
-                    root->left = recursive_insert(root->left, val);
+                    root->left = insert(root->left, val);
                 }
                 else if (val > root->data) {
-                    root->right = recursive_insert(root->right, val);
+                    root->right = insert(root->right, val);
                 }
         
                 else {
@@ -177,21 +180,21 @@ class AVLTree {
                 root = LL_rotation(root);
             }
 
-            else if (balance_factor(root) > 1 && balance_factor(root->left) == -1) { // LL Rotation
+            else if (balance_factor(root) > 1 && balance_factor(root->left) == -1) { // LR Rotation
                 root = LR_rotation(root);
             }
 
-            else if (balance_factor(root) < 1 && balance_factor(root->right) == -1) { // LL Rotation
+            else if (balance_factor(root) < -1 && balance_factor(root->right) == -1) { // RR Rotation
                 root = RR_rotation(root);
             }
-            else if (balance_factor(root) < 1 && balance_factor(root->right) == 1) { // LL Rotation
+            else if (balance_factor(root) < -1 && balance_factor(root->right) == 1) { // RL Rotation
                 root = RL_Rotation(root);
             }
         }
 
-        TreeNode* delete(TreeNode *root, T key) {
+        TreeNode* remove(TreeNode *root, T key) {
             if (root == nullptr) {
-                return;
+                return nullptr;
             }
     
             if (root->left == nullptr && root->right == nullptr) {
@@ -200,24 +203,24 @@ class AVLTree {
             }
     
             if (key < root->data) {
-                root->left = delete(root->left, key);
+                root->left = remove(root->left, key);
             }
 
             else if (key > root->data) {
-                root->right = delete(root->right, key);
+                root->right = remove(root->right, key);
             }
     
             else {
                 if (height(root->left) > height(root->right)) {
                     TreeNode* q = InPre(root->left);
                     root->data = q->data;
-                    root->left = delete(p->left, q->data);
+                    root->left = remove(p->left, q->data);
                 }
         
                 else {
                     TreeNode* q = InSucc(root->right);
                     root->data = q->data;
-                    root->right = delete(p->right, q->data);
+                    root->right = remove(p->right, q->data);
                 }
             }
 
@@ -237,15 +240,15 @@ class AVLTree {
                 root = LL_rotation(root);
             }
 
-            else if (balance_factor(root) < 1 && balance_factor(root->right) == 1) { // R1 Rotation
+            else if (balance_factor(root) < -1 && balance_factor(root->right) == 1) { // R1 Rotation
                 root = RL_rotation(root);
             }
 
-            else if (balance_factor(root) < 1 && balance_factor(root->right) == -1) { // R-1 Rotation
+            else if (balance_factor(root) < -1 && balance_factor(root->right) == -1) { // R-1 Rotation
                 root = RR_Rotation(root);
             }
 
-            else if (balance_factor(root) < 1 && balance_factor(root->right) == 0) { // R0 Rotation
+            else if (balance_factor(root) < -1 && balance_factor(root->right) == 0) { // R0 Rotation
                 root = RR_Rotation(root);
             }
 
