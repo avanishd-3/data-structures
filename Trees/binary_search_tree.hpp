@@ -224,7 +224,7 @@ class BinarySearchTree {
             }
         }
 
-        TreeNode* delete(TreeNode *root, T key) {
+        TreeNode* recursive_remove(T key) {
             if (root == nullptr) {
                 return;
             }
@@ -235,28 +235,102 @@ class BinarySearchTree {
             }
     
             if (key < root->data) {
-                root->left = delete(root->left, key);
+                root->left = recursive_remove(root->left, key);
             }
 
             else if (key > root->data) {
-                root->right = delete(root->right, key);
+                root->right = recursive_remove(root->right, key);
             }
     
             else {
                 if (height(root->left) > height(root->right)) {
                     TreeNode* q = InPre(root->left);
                     root->data = q->data;
-                    root->left = delete(p->left, q->data);
+                    root->left = recursive_remove(p->left, q->data);
                 }
         
                 else {
                     TreeNode* q = InSucc(root->right);
                     root->data = q->data;
-                    root->right = delete(p->right, q->data);
+                    root->right = recursive_remove(p->right, q->data);
                 }
             }
 
             return root;
         }
 
+        bool iterative_remove(T key) {
+            TreeNode *parent = nullptr;
+	        TreeNode *curr = root;
+
+            while(curr) {
+                (if curr->key == key) {
+                    if (!curr->left && !curr->right) {
+                        // Leaf node
+                        if (!parent) {
+                            root = nullptr;
+                        }
+                        else if (parent->left == curr) {
+                            parent->left = nullptr;
+                        }
+                        else {
+                            parent->right = nullptr;
+                        }
+                        return true;
+                    }
+                    else if (!curr->right) {
+                        // Remove node w/ only left child
+                        if (!parent) {
+                            root = curr->left;
+                        }
+                        else if (parent->left == curr) {
+                            parent->left = curr->left;
+                        }
+                        else {
+                            parent->right = curr->left;
+                        }
+                        return true;
+                    }
+                    else if (!curr->left) {
+                        // Remove node w/ only right child
+                        if (!parent) {
+                            root = curr->right;
+                        }
+                        else if (parent->left == curr) {
+                            parent->left = curr->right;
+                        }
+                        else {
+                            parent->right = curr->right;
+                        }
+                        return true;
+                    }
+                    else {
+                        // Remove node w/ 2 children
+                        
+                        // Find successor (leftmost child of right subtree)
+
+                        TreeNode *successor = curr->right;
+                        while (successor->left) {
+                            successor = sucessor->left;
+                        }
+
+                        curr->key = successor->key;
+                        parent = curr;
+
+                        curr = curr->right;
+                        key = successor->key;
+                    }
+                }
+                else if (curr->key < key) {
+                    parent = curr;
+                    curr = curr->right;
+                }
+                else {
+                    parent = curr;
+                    curr = curr->left;
+                }
+            }
+            return false;
+
+        }
 };
