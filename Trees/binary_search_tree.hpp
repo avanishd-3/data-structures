@@ -202,7 +202,7 @@ class BinarySearchTree {
     
             while (curr) {
                 trail = curr;
-                if (val == root->data) {
+                if (val == curr->data) {
                     return; // Exit early
                 }
         
