@@ -198,29 +198,36 @@ class BinarySearchTree {
 
         void iterative_insert(TreeNode *root, T val) {
             TreeNode *curr = root;
-            TreeNode *trail = root;
-    
+
+            if (!curr) {
+                root = new Node{val, nullptr, nullptr};
+                return;
+            }
+            
             while (curr) {
-                trail = curr;
-                if (val == root->data) {
-                    return; // Exit early
+                if (val == curr->data) {
+                    return; // No duplicates allowed
                 }
-        
+                
                 else if (val < curr->data) {
-                    curr = curr->left;
+                    if (!curr->left) {
+                        curr->left = new Node{val, nullptr, nullptr};
+                        curr = nullptr;
+                    }
+                    else {
+                        curr = curr->left;
+                    }
                 }
-        
+                
                 else {
-                    curr = curr->right;
+                    if (!curr->right) {
+                        curr->right = new Node{val, nullptr, nullptr};
+                        curr = nullptr;
+                    }
+                    else {
+                        curr = curr->right;
+                    }
                 }
-            }
-    
-            if (val < trail->data) {
-                trail->left = new Node{val, nullptr, nullptr};
-            }
-    
-            else {
-                trail->right = new Node{val, nullptr, nullptr};
             }
         }
 
