@@ -9,11 +9,6 @@ class BinarySearchTree {
             T data;
             TreeNode *left;
             TreeNode *right;
-
-            ~TreeNode() {
-                delete left;
-                delete right;
-            }
         };
 
         TreeNode *root;
@@ -80,8 +75,23 @@ class BinarySearchTree {
             }
         }
 
-        ~BinaryTree() {
-            delete root;
+        ~BinaryTree() { // Use rotations
+            while(root) {
+                if (!root->left) {
+                    TreeNode *to_delete = root->right;
+                    delete root;
+                    root = to_delete;
+                }
+                else {
+                    // Perform left rotation over root
+                    TreeNode *left_child = root->left;
+                    
+                    root->left = left_child->right;
+                    left_child->right = root;
+
+                    root = left_child;
+                }
+            }
         }
 
         int height(TreeNode *root) {

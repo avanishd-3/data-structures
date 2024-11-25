@@ -8,11 +8,6 @@ class AVLTree {
             TreeNode *left;
             TreeNode *right;
             int height;
-
-            ~TreeNode() {
-                delete left;
-                delete right;
-            }
         };
 
         TreeNode *root;
@@ -137,8 +132,23 @@ class AVLTree {
         {
         }
 
-        ~AVLTree() {
-            delete root;
+        ~AVLTree() { // Use rotations
+            while(root) {
+                if (!root->left) {
+                    TreeNode *to_delete = root->right;
+                    delete root;
+                    root = to_delete;
+                }
+                else {
+                    // Perform left rotation over root
+                    TreeNode *left_child = root->left;
+                    
+                    root->left = left_child->right;
+                    left_child->right = root;
+
+                    root = left_child;
+                }
+            }
         }
 
         int height(TreeNode *root) {
