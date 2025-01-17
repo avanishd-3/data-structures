@@ -16,6 +16,12 @@ impl fmt::Debug for StackEmptyError {
     }
 }
 
+impl PartialEq for StackEmptyError {
+    fn eq(&self, other: &StackEmptyError) -> bool {
+        return format!("{:?}", self) == format!("{:?}", other);
+    }
+}
+
 
 struct Stack<T> {
     stack: Vec<T>,
@@ -118,10 +124,11 @@ mod tests {
     }
 
     #[test]
-    fn empty_call_to_pop_returns_error() {
+    fn empty_call_to_pop_returns_stack_empty_error() {
         let mut stack: Stack<isize> = Stack::new();
         let result = stack.pop();
         assert_eq!(result.is_err(), true);
+        assert_eq!(result.err(), Some(StackEmptyError));
     }
 
     #[test]
